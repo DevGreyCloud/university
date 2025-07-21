@@ -25,7 +25,7 @@ public class Lecturer {
     @Column(name = "surname")
     private String surname;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(
             name = "student_lecturer",
             joinColumns = @JoinColumn(name = "lecturer_id"),
