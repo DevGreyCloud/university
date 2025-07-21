@@ -25,7 +25,7 @@ public class Student {
     @Column(name = "surname")
     private String surname;
 
-    @ManyToMany(mappedBy = "students")
+    @ManyToMany(mappedBy = "students", cascade = CascadeType.PERSIST)
     @ToString.Exclude
     @Builder.Default
     private Set<Lecturer> lecturers = new HashSet<>();
@@ -33,10 +33,5 @@ public class Student {
     public void addLecturer(Lecturer lecturer) {
         lecturers.add(lecturer);
         lecturer.getStudents().add(this);
-    }
-
-    public void removeLecturer(Lecturer lecturer) {
-        lecturers.remove(lecturer);
-        lecturer.getStudents().remove(this);
     }
 }

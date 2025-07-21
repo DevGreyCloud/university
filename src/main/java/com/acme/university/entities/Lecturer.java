@@ -25,7 +25,7 @@ public class Lecturer {
     @Column(name = "surname")
     private String surname;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "student_lecturer",
             joinColumns = @JoinColumn(name = "lecturer_id"),
@@ -37,10 +37,5 @@ public class Lecturer {
     public void addStudent(Student student) {
         students.add(student);
         student.getLecturers().add(this);
-    }
-
-    public void removeStudent(Student student) {
-        students.remove(student);
-        student.getLecturers().remove(this);
     }
 }
