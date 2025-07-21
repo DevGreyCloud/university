@@ -5,8 +5,6 @@ import lombok.Data;
 import lombok.Getter;
 
 @Data
-@AllArgsConstructor
-@Getter
 public class StudentDto {
     private Long id;
     private String name;

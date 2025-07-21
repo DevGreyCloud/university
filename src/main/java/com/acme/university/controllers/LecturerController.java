@@ -2,6 +2,7 @@ package com.acme.university.controllers;
 
 import com.acme.university.dtos.LecturerDto;
 import com.acme.university.entities.Lecturer;
+import com.acme.university.mappers.LecturerMapper;
 import com.acme.university.repositories.LecturerRepository;
 import com.acme.university.services.LecturerService;
 import lombok.AllArgsConstructor;
@@ -19,12 +20,13 @@ import java.util.List;
 @RequestMapping("/lecturers")
 public class LecturerController {
     private final LecturerRepository lecturerRepository;
+    private final LecturerMapper lecturerMapper;
 
     @GetMapping
     public Iterable<LecturerDto> getLecturers() {
         return lecturerRepository.findAll()
                 .stream()
-                .map(lecturer -> new LecturerDto(lecturer.getId(), lecturer.getName(), lecturer.getSurname()))
+                .map(lecturerMapper::toDto)
                 .toList();
     }
 
@@ -35,7 +37,6 @@ public class LecturerController {
             return ResponseEntity.notFound().build();
         }
 
-        var lecturerDto = new LecturerDto(lecturer.getId(), lecturer.getName(), lecturer.getSurname());
-        return ResponseEntity.ok(lecturerDto);
+        return ResponseEntity.ok(lecturerMapper.toDto(lecturer));
     }
 }
