@@ -2,6 +2,7 @@ package com.acme.university.controllers;
 
 import com.acme.university.dtos.ErrorResponse;
 import com.acme.university.dtos.LecturerDto;
+import com.acme.university.dtos.LecturerNoIdDto;
 import com.acme.university.dtos.LecturerSimplerDto;
 import com.acme.university.entities.Lecturer;
 import com.acme.university.mappers.LecturerMapper;
@@ -30,13 +31,13 @@ public class LecturerController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<LecturerDto> getLecturerById(@PathVariable Long id) {
+    public ResponseEntity<LecturerNoIdDto> getLecturerById(@PathVariable Long id) {
         var lecturer = lecturerRepository.findById(id).orElse(null);
         if (lecturer == null) {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(lecturerMapper.toDto(lecturer));
+        return ResponseEntity.ok(lecturerMapper.toLecturerNoIdDto(lecturer));
     }
 
     @PostMapping
