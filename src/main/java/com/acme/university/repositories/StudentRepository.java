@@ -1,6 +1,5 @@
 package com.acme.university.repositories;
 
-import com.acme.university.entities.Lecturer;
 import com.acme.university.entities.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 

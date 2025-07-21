@@ -6,6 +6,7 @@ import com.acme.university.entities.Student;
 import com.acme.university.mappers.StudentMapper;
 import com.acme.university.repositories.LecturerRepository;
 import com.acme.university.repositories.StudentRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,9 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createStudent(@RequestBody StudentCreateDto studentCreateDto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<?> createStudent(
+            @Valid @RequestBody StudentCreateDto studentCreateDto,
+            UriComponentsBuilder uriBuilder) {
         Optional<Student> existingStudent = studentRepository.findByNameAndSurname(
                 studentCreateDto.getName(),
                 studentCreateDto.getSurname()

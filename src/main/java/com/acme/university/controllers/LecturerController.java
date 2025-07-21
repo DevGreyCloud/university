@@ -7,6 +7,7 @@ import com.acme.university.dtos.LecturerSimplerDto;
 import com.acme.university.entities.Lecturer;
 import com.acme.university.mappers.LecturerMapper;
 import com.acme.university.repositories.LecturerRepository;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +42,9 @@ public class LecturerController {
     }
 
     @PostMapping
-    public ResponseEntity<?> createLecturer(@RequestBody LecturerSimplerDto lecturerSimplerDto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<?> createLecturer(
+            @Valid @RequestBody LecturerSimplerDto lecturerSimplerDto,
+            UriComponentsBuilder uriBuilder) {
         Optional<Lecturer> existingLecturer = lecturerRepository.findByNameAndSurname(
                 lecturerSimplerDto.getName(), 
                 lecturerSimplerDto.getSurname()
