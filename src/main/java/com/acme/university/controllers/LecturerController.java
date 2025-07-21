@@ -2,7 +2,6 @@ package com.acme.university.controllers;
 
 import com.acme.university.dtos.ErrorResponse;
 import com.acme.university.dtos.LecturerDto;
-import com.acme.university.dtos.LecturerNoIdDto;
 import com.acme.university.dtos.LecturerSimplerDto;
 import com.acme.university.entities.Lecturer;
 import com.acme.university.mappers.LecturerMapper;

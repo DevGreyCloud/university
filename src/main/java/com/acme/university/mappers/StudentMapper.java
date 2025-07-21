@@ -1,6 +1,5 @@
 package com.acme.university.mappers;
 
-import com.acme.university.dtos.LecturerDto;
 import com.acme.university.dtos.LecturerSimplerDto;
 import com.acme.university.dtos.StudentDto;
 import com.acme.university.entities.Lecturer;
