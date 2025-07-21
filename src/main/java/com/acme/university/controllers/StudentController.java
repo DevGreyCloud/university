@@ -1,7 +1,6 @@
 package com.acme.university.controllers;
 
 import com.acme.university.dtos.StudentDto;
-import com.acme.university.dtos.StudentDto;
 import com.acme.university.mappers.StudentMapper;
 import com.acme.university.repositories.StudentRepository;
 import lombok.AllArgsConstructor;
