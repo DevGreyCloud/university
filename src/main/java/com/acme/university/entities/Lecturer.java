@@ -33,6 +33,7 @@ public class Lecturer {
             inverseJoinColumns = @JoinColumn(name = "student_id")
     )
     @Builder.Default
+    @ToString.Exclude
     private Set<Student> students = new HashSet<>();
 
     public void addStudent(Student student) {
