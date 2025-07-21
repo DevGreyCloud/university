@@ -1,14 +1,19 @@
 package com.acme.university.controllers;
 
+import com.acme.university.dtos.ErrorResponse;
 import com.acme.university.dtos.LecturerDto;
+import com.acme.university.dtos.LecturerNoIdDto;
+import com.acme.university.dtos.LecturerSimplerDto;
+import com.acme.university.entities.Lecturer;
 import com.acme.university.mappers.LecturerMapper;
 import com.acme.university.repositories.LecturerRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
@@ -33,5 +38,33 @@ public class LecturerController {
         }
 
         return ResponseEntity.ok(lecturerMapper.toDto(lecturer));
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createLecturer(@RequestBody LecturerSimplerDto lecturerSimplerDto, UriComponentsBuilder uriBuilder) {
+        Optional<Lecturer> existingLecturer = lecturerRepository.findByNameAndSurname(
+                lecturerSimplerDto.getName(), 
+                lecturerSimplerDto.getSurname()
+        );
+        
+        if (existingLecturer.isPresent()) {
+            ErrorResponse errorResponse = new ErrorResponse(
+                    String.format("Lecturer with name '%s' and surname '%s' already exists",
+                            lecturerSimplerDto.getName(),
+                            lecturerSimplerDto.getSurname())
+            );
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
+
+        }
+        
+        var lecturer = lecturerMapper.toEntity(lecturerSimplerDto);
+        lecturerRepository.save(lecturer);
+
+        var lecturerDto = lecturerMapper.toDto(lecturer);
+        var uri = uriBuilder.path("/lecturers/{id}").buildAndExpand(lecturerDto.getId()).toUri();
+
+        var lecturerNoIdDto = lecturerMapper.toLecturerNoIdDto(lecturer);
+
+        return ResponseEntity.created(uri).body(lecturerNoIdDto);
     }
 }

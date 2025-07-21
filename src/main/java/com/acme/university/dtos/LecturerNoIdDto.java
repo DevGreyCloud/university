@@ -1,11 +1,11 @@
 package com.acme.university.dtos;
 
 import lombok.Data;
+
 import java.util.Set;
 
 @Data
-public class LecturerDto {
-    private Long id;
+public class LecturerNoIdDto {
     private String name;
     private String surname;
     private Set<StudentSimplerDto> students;
