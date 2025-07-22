@@ -1,9 +1,6 @@
 package com.acme.university.dtos;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.PositiveOrZero;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
@@ -18,6 +15,7 @@ public class StudentCreateDto {
     @Size(max = 255, message = "Surname must be less than 255 characters")
     private String surname;
 
-    @PositiveOrZero
+    @NotNull(message = "Lecturer ID is required")
+    @PositiveOrZero(message = "Lecturer ID must be greater than or equal to zero")
     private Long lecturerId;
 }
