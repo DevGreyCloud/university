@@ -90,6 +90,11 @@
             <artifactId>bucket4j-core</artifactId>
             <version>7.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>dotenv-java</artifactId>
+            <version>3.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -100,8 +105,8 @@
                 <version>11.7.2</version>
                 <configuration>
                     <url>jdbc:mysql://localhost:3306/university?createDatabaseIfNotExist=true</url>
-                    <user>root</user>
-                    <password>PWD</password>
+                    <user>${flyway.user}</user>
+                    <password>${flyway.password}</password>
                     <cleanDisabled>false</cleanDisabled>
                 </configuration>
             </plugin>
