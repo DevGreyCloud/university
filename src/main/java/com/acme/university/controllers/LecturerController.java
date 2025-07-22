@@ -2,6 +2,7 @@ package com.acme.university.controllers;
 
 import com.acme.university.dtos.LecturerCreateDto;
 import com.acme.university.dtos.LecturerDto;
+import com.acme.university.dtos.LecturerSummaryDto;
 import com.acme.university.exceptions.LecturerAlreadyExistsException;
 import com.acme.university.exceptions.LecturerNotFoundException;
 import com.acme.university.services.LecturerService;
@@ -21,16 +22,13 @@ public class LecturerController {
     private final LecturerService lecturerService;
 
     @GetMapping
-    public ResponseEntity<Iterable<LecturerDto>> getLecturers() {
+    public ResponseEntity<Iterable<LecturerSummaryDto>> getLecturers() {
         return ResponseEntity.ok(lecturerService.getLecturers());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<LecturerDto> getLecturerById(@PathVariable Long id) {
         var lecturer = lecturerService.getLecturerById(id);
-        if (lecturer == null) {
-            return ResponseEntity.notFound().build();
-        }
 
         return ResponseEntity.ok(lecturer);
     }

@@ -2,6 +2,7 @@ package com.acme.university.services;
 
 import com.acme.university.dtos.LecturerCreateDto;
 import com.acme.university.dtos.LecturerDto;
+import com.acme.university.dtos.LecturerSummaryDto;
 import com.acme.university.entities.Lecturer;
 import com.acme.university.exceptions.LecturerAlreadyExistsException;
 import com.acme.university.exceptions.LecturerNotFoundException;
@@ -18,10 +19,10 @@ public class LecturerService {
     private final LecturerRepository lecturerRepository;
     private final LecturerMapper lecturerMapper;
 
-    public Iterable<LecturerDto> getLecturers() {
+    public Iterable<LecturerSummaryDto> getLecturers() {
         return lecturerRepository.findAll()
                 .stream()
-                .map(lecturerMapper::toDto)
+                .map(lecturerMapper::toSummaryDto)
                 .toList();
     }
 

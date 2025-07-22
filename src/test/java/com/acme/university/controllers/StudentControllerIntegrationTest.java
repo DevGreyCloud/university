@@ -41,12 +41,6 @@ public class StudentControllerIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Autowired
-    private StudentRepository studentRepository;
-
-    @Autowired
-    private LecturerRepository lecturerRepository;
-
     private StudentService mockStudentService;
 
     @org.junit.jupiter.api.BeforeEach
