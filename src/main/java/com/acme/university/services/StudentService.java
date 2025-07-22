@@ -21,10 +21,10 @@ public class StudentService {
     private final StudentMapper studentMapper;
     private final LecturerMapper lecturerMapper;
 
-    public Iterable<StudentDto> getStudents() {
+    public Iterable<StudentSummaryDto> getStudents() {
         return studentRepository.findAll()
                 .stream()
-                .map(studentMapper::toDto)
+                .map(studentMapper::toSummaryDto)
                 .toList();
     }
 
@@ -50,13 +50,9 @@ public class StudentService {
         var lecturer = lecturerService.getLecturerById(studentCreateDto.getLecturerId());
         var student = studentMapper.toEntity(studentCreateDto);
 
-        student.addLecturer(lecturer);
+        student.addLecturer(lecturerMapper.toEntity(lecturer));
         studentRepository.save(student);
 
         return studentMapper.toDto(student);
-    }
-
-    public StudentResponseDto createStudentResponseDto(StudentDto studentDto) {
-        return studentMapper.toStudentResponseDto(studentDto);
     }
 }

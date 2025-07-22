@@ -1,9 +1,6 @@
 package com.acme.university.controllers;
 
 import com.acme.university.dtos.*;
-import com.acme.university.entities.Lecturer;
-import com.acme.university.entities.Student;
-import com.acme.university.exceptions.LecturerAlreadyExistsException;
 import com.acme.university.exceptions.LecturerNotFoundException;
 import com.acme.university.exceptions.StudentAlreadyExistsException;
 import com.acme.university.exceptions.StudentNotFoundException;
@@ -16,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Map;
-import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
@@ -25,7 +21,7 @@ public class StudentController {
     private final StudentService studentService;
 
     @GetMapping
-    public Iterable<StudentDto> getStudents() {
+    public Iterable<StudentSummaryDto> getStudents() {
         return studentService.getStudents();
     }
 
@@ -40,11 +36,10 @@ public class StudentController {
     public ResponseEntity<?> createStudent(
             @Valid @RequestBody StudentCreateDto studentCreateDto,
             UriComponentsBuilder uriBuilder) {
-        var student = studentService.createStudent(studentCreateDto);
-        var uri = uriBuilder.path("/students/{id}").buildAndExpand(student.getId()).toUri();
+        var studentDto = studentService.createStudent(studentCreateDto);
+        var uri = uriBuilder.path("/students/{id}").buildAndExpand(studentDto.getId()).toUri();
 
-        var studentResponseDto = studentService.createStudentResponseDto(student);
-        return ResponseEntity.created(uri).body(studentResponseDto);
+        return ResponseEntity.created(uri).body(studentDto);
     }
 
     @ExceptionHandler(StudentNotFoundException.class)

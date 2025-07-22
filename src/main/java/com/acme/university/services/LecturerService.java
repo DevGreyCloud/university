@@ -2,7 +2,6 @@ package com.acme.university.services;
 
 import com.acme.university.dtos.LecturerCreateDto;
 import com.acme.university.dtos.LecturerDto;
-import com.acme.university.dtos.LecturerResponseDto;
 import com.acme.university.entities.Lecturer;
 import com.acme.university.exceptions.LecturerAlreadyExistsException;
 import com.acme.university.exceptions.LecturerNotFoundException;
@@ -26,12 +25,12 @@ public class LecturerService {
                 .toList();
     }
 
-    public Lecturer getLecturerById(Long id) {
+    public LecturerDto getLecturerById(Long id) {
         var lecturer = lecturerRepository.findById(id).orElse(null);
         if (lecturer == null) {
             throw new LecturerNotFoundException();
         }
-        return lecturer;
+        return lecturerMapper.toDto(lecturer);
     }
 
     public LecturerDto createLecturer(LecturerCreateDto lecturerCreateDto) {
@@ -48,9 +47,5 @@ public class LecturerService {
         lecturerRepository.save(lecturer);
 
         return lecturerMapper.toDto(lecturer);
-    }
-
-    public LecturerResponseDto createLecturerNoIdDto(LecturerDto lecturerDto) {
-        return lecturerMapper.toLecturerResponseDto(lecturerDto);
     }
 }

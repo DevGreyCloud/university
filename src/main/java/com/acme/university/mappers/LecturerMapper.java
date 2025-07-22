@@ -13,15 +13,7 @@ public interface LecturerMapper {
     @Mapping(source = "students", target = "students")
     LecturerDto toDto(Lecturer lecturer);
 
-    @Mapping(source = "name", target = "name")
-    @Mapping(source = "surname", target = "surname")
-    LecturerResponseDto toLecturerResponseDto(Lecturer lecturer);
-
-    @Mapping(source = "name", target = "name")
-    @Mapping(source = "surname", target = "surname")
-    LecturerResponseDto toLecturerResponseDto(LecturerDto lecturer);
-
     Lecturer toEntity(LecturerCreateDto lecturerCreateDto);
 
-    Lecturer toEntity(LecturerResponseDto lecturerResponseDto);
+    Lecturer toEntity(LecturerDto lecturerDto);
 }

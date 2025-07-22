@@ -2,7 +2,6 @@ package com.acme.university.controllers;
 
 import com.acme.university.dtos.LecturerCreateDto;
 import com.acme.university.dtos.LecturerDto;
-import com.acme.university.entities.Lecturer;
 import com.acme.university.exceptions.LecturerAlreadyExistsException;
 import com.acme.university.exceptions.LecturerNotFoundException;
 import com.acme.university.services.LecturerService;
@@ -27,7 +26,7 @@ public class LecturerController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Lecturer> getLecturerById(@PathVariable Long id) {
+    public ResponseEntity<LecturerDto> getLecturerById(@PathVariable Long id) {
         var lecturer = lecturerService.getLecturerById(id);
         if (lecturer == null) {
             return ResponseEntity.notFound().build();
@@ -43,9 +42,7 @@ public class LecturerController {
         var lecturerDto = lecturerService.createLecturer(lecturerCreateDto);
         var uri = uriBuilder.path("/lecturers/{id}").buildAndExpand(lecturerDto.getId()).toUri();
 
-        var lecturerNoIdDto = lecturerService.createLecturerNoIdDto(lecturerDto);
-
-        return ResponseEntity.created(uri).body(lecturerNoIdDto);
+        return ResponseEntity.created(uri).body(lecturerDto);
     }
 
     @ExceptionHandler(LecturerNotFoundException.class)
