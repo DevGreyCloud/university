@@ -1,6 +1,6 @@
 package com.acme.university.controllers;
 
-import com.acme.university.dtos.LecturerSimplerDto;
+import com.acme.university.dtos.LecturerCreateDto;
 import com.acme.university.dtos.StudentCreateDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -38,7 +38,7 @@ public class ErrorHandlingIntegrationTest {
     @Test
     public void testValidationErrorForLecturerCreation() throws Exception {
         // Create lecturer with invalid data
-        LecturerSimplerDto lecturerDto = new LecturerSimplerDto();
+        LecturerCreateDto lecturerDto = new LecturerCreateDto();
         lecturerDto.setName(""); // Empty name - should fail validation
         lecturerDto.setSurname("Smith");
 
@@ -93,6 +93,6 @@ public class ErrorHandlingIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(studentDto)))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string(containsString("does not exist")));
+                .andExpect(content().string(containsString("Lecturer not found.")));
     }
 }

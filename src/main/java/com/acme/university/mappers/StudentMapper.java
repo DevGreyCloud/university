@@ -15,11 +15,15 @@ public interface StudentMapper {
 
     @Mapping(source = "name", target = "name")
     @Mapping(source = "surname", target = "surname")
-    LecturerSimplerDto toLecturerSimplerDto(Lecturer lecturer);
+    StudentCreateDto toStudentCreateDto(Student student);
 
     @Mapping(source = "name", target = "name")
     @Mapping(source = "surname", target = "surname")
-    StudentNoIdDto toStudentNoIdDto(Student student);
+    StudentResponseDto toStudentResponseDto(Student student);
+
+    @Mapping(source = "name", target = "name")
+    @Mapping(source = "surname", target = "surname")
+    StudentResponseDto toStudentResponseDto(StudentDto studentDto);
 
     Student toEntity(StudentCreateDto studentCreateDto);
 }

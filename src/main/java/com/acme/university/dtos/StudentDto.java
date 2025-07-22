@@ -8,5 +8,5 @@ public class StudentDto {
     private Long id;
     private String name;
     private String surname;
-    private Set<LecturerSimplerDto> lecturers;
+    private Set<LecturerCreateDto> lecturers;
 }

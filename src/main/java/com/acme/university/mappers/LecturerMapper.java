@@ -2,7 +2,6 @@ package com.acme.university.mappers;
 
 import com.acme.university.dtos.*;
 import com.acme.university.entities.Lecturer;
-import com.acme.university.entities.Student;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -14,14 +13,15 @@ public interface LecturerMapper {
     @Mapping(source = "students", target = "students")
     LecturerDto toDto(Lecturer lecturer);
 
-    // Add a method for simplified student mapping (without lecturers)
     @Mapping(source = "name", target = "name")
     @Mapping(source = "surname", target = "surname")
-    StudentSimplerDto toStudentSimplerDto(Student student);
+    LecturerResponseDto toLecturerResponseDto(Lecturer lecturer);
 
     @Mapping(source = "name", target = "name")
     @Mapping(source = "surname", target = "surname")
-    LecturerNoIdDto toLecturerNoIdDto(Lecturer lecturer);
+    LecturerResponseDto toLecturerResponseDto(LecturerDto lecturer);
 
-    Lecturer toEntity(LecturerSimplerDto lecturerSimplerDto);
+    Lecturer toEntity(LecturerCreateDto lecturerCreateDto);
+
+    Lecturer toEntity(LecturerResponseDto lecturerResponseDto);
 }

@@ -1,12 +1,11 @@
 package com.acme.university.controllers;
 
-import com.acme.university.dtos.ErrorResponse;
+import com.acme.university.dtos.LecturerCreateDto;
 import com.acme.university.dtos.LecturerDto;
-import com.acme.university.dtos.LecturerNoIdDto;
-import com.acme.university.dtos.LecturerSimplerDto;
 import com.acme.university.entities.Lecturer;
-import com.acme.university.mappers.LecturerMapper;
-import com.acme.university.repositories.LecturerRepository;
+import com.acme.university.exceptions.LecturerAlreadyExistsException;
+import com.acme.university.exceptions.LecturerNotFoundException;
+import com.acme.university.services.LecturerService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,60 +13,48 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Optional;
+import java.util.Map;
 
 @AllArgsConstructor
 @RestController
 @RequestMapping("/lecturers")
 public class LecturerController {
-    private final LecturerRepository lecturerRepository;
-    private final LecturerMapper lecturerMapper;
+    private final LecturerService lecturerService;
 
     @GetMapping
     public Iterable<LecturerDto> getLecturers() {
-        return lecturerRepository.findAll()
-                .stream()
-                .map(lecturerMapper::toDto)
-                .toList();
+        return lecturerService.getLecturers();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<LecturerNoIdDto> getLecturerById(@PathVariable Long id) {
-        var lecturer = lecturerRepository.findById(id).orElse(null);
+    public ResponseEntity<Lecturer> getLecturerById(@PathVariable Long id) {
+        var lecturer = lecturerService.getLecturerById(id);
         if (lecturer == null) {
             return ResponseEntity.notFound().build();
         }
 
-        return ResponseEntity.ok(lecturerMapper.toLecturerNoIdDto(lecturer));
+        return ResponseEntity.ok(lecturer);
     }
 
     @PostMapping
     public ResponseEntity<?> createLecturer(
-            @Valid @RequestBody LecturerSimplerDto lecturerSimplerDto,
+            @Valid @RequestBody LecturerCreateDto lecturerCreateDto,
             UriComponentsBuilder uriBuilder) {
-        Optional<Lecturer> existingLecturer = lecturerRepository.findByNameAndSurname(
-                lecturerSimplerDto.getName(), 
-                lecturerSimplerDto.getSurname()
-        );
-        
-        if (existingLecturer.isPresent()) {
-            ErrorResponse errorResponse = new ErrorResponse(
-                    String.format("Lecturer with name '%s' and surname '%s' already exists",
-                            lecturerSimplerDto.getName(),
-                            lecturerSimplerDto.getSurname())
-            );
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
-
-        }
-        
-        var lecturer = lecturerMapper.toEntity(lecturerSimplerDto);
-        lecturerRepository.save(lecturer);
-
-        var lecturerDto = lecturerMapper.toDto(lecturer);
+        var lecturerDto = lecturerService.createLecturer(lecturerCreateDto);
         var uri = uriBuilder.path("/lecturers/{id}").buildAndExpand(lecturerDto.getId()).toUri();
 
-        var lecturerNoIdDto = lecturerMapper.toLecturerNoIdDto(lecturer);
+        var lecturerNoIdDto = lecturerService.createLecturerNoIdDto(lecturerDto);
 
         return ResponseEntity.created(uri).body(lecturerNoIdDto);
+    }
+
+    @ExceptionHandler(LecturerNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleLecturerNotFound() {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Lecturer not found."));
+    }
+
+    @ExceptionHandler(LecturerAlreadyExistsException.class)
+    public ResponseEntity<Map<String, String>> handleLecturerAlreadyExists() {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", "Lecturer already exists. Please try again with a different name and surname, or contact the administrator if you believe this is an error on our side."));
     }
 }

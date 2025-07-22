@@ -26,18 +26,9 @@ public class Lecturer {
     @Column(name = "surname")
     private String surname;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(
-            name = "student_lecturer",
-            joinColumns = @JoinColumn(name = "lecturer_id"),
-            inverseJoinColumns = @JoinColumn(name = "student_id")
-    )
-    @Builder.Default
+    @ManyToMany(mappedBy = "lecturers")
     @ToString.Exclude
+    @Builder.Default
     private Set<Student> students = new HashSet<>();
 
-    public void addStudent(Student student) {
-        students.add(student);
-        student.getLecturers().add(this);
-    }
 }

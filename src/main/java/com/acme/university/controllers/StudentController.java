@@ -3,9 +3,11 @@ package com.acme.university.controllers;
 import com.acme.university.dtos.*;
 import com.acme.university.entities.Lecturer;
 import com.acme.university.entities.Student;
-import com.acme.university.mappers.StudentMapper;
-import com.acme.university.repositories.LecturerRepository;
-import com.acme.university.repositories.StudentRepository;
+import com.acme.university.exceptions.LecturerAlreadyExistsException;
+import com.acme.university.exceptions.LecturerNotFoundException;
+import com.acme.university.exceptions.StudentAlreadyExistsException;
+import com.acme.university.exceptions.StudentNotFoundException;
+import com.acme.university.services.StudentService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,73 +15,50 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import java.util.Map;
 import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
 @RequestMapping("/students")
 public class StudentController {
-    private final StudentRepository studentRepository;
-    private final StudentMapper studentMapper;
-    private final LecturerRepository lecturerRepository;
+    private final StudentService studentService;
 
     @GetMapping
     public Iterable<StudentDto> getStudents() {
-        return studentRepository.findAll()
-                .stream()
-                .map(studentMapper::toDto)
-                .toList();
+        return studentService.getStudents();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<StudentNoIdDto> getStudentById(@PathVariable Long id) {
-        var student = studentRepository.findById(id).orElse(null);
-        if (student == null) {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<StudentDto> getStudentById(@PathVariable Long id) {
+        var student = studentService.getStudentById(id);
 
-        return ResponseEntity.ok(studentMapper.toStudentNoIdDto(student));
+        return ResponseEntity.ok(student);
     }
 
     @PostMapping
     public ResponseEntity<?> createStudent(
             @Valid @RequestBody StudentCreateDto studentCreateDto,
             UriComponentsBuilder uriBuilder) {
-        Optional<Student> existingStudent = studentRepository.findByNameAndSurname(
-                studentCreateDto.getName(),
-                studentCreateDto.getSurname()
-        );
+        var student = studentService.createStudent(studentCreateDto);
+        var uri = uriBuilder.path("/students/{id}").buildAndExpand(student.getId()).toUri();
 
-        if (existingStudent.isPresent()) {
-            ErrorResponse errorResponse = new ErrorResponse(
-                    String.format("Student with name '%s' and surname '%s' already exists",
-                            studentCreateDto.getName(),
-                            studentCreateDto.getSurname())
-            );
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(errorResponse);
-        }
+        var studentResponseDto = studentService.createStudentResponseDto(student);
+        return ResponseEntity.created(uri).body(studentResponseDto);
+    }
 
-        Optional<Lecturer> existingLecturer = lecturerRepository.findById(
-                studentCreateDto.getLecturerId()
-        );
+    @ExceptionHandler(StudentNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleStudentNotFound() {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Student not found."));
+    }
 
-        if (existingLecturer.isEmpty()) {
-            ErrorResponse errorResponse = new ErrorResponse(
-                    String.format("Lecturer with id '%d' does not exist",
-                            studentCreateDto.getLecturerId())
-            );
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
-        }
+    @ExceptionHandler(StudentAlreadyExistsException.class)
+    public ResponseEntity<Map<String, String>> handleStudentAlreadyExists() {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", "Student already exists. Please try again with a different name and surname, or contact the administrator if you believe this is an error on our side."));
+    }
 
-        var student = studentMapper.toEntity(studentCreateDto);
-        student.addLecturer(existingLecturer.get());
-        studentRepository.save(student);
-
-        var studentDto = studentMapper.toDto(student);
-        var uri = uriBuilder.path("/students/{id}").buildAndExpand(studentDto.getId()).toUri();
-
-        var studentNoIdDto = studentMapper.toStudentNoIdDto(student);
-
-        return ResponseEntity.created(uri).body(studentNoIdDto);
+    @ExceptionHandler(LecturerNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleLecturerNotFound() {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Lecturer not found."));
     }
 }

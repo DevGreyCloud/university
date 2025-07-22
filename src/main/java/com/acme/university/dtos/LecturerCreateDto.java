@@ -6,7 +6,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class LecturerSimplerDto {
+public class LecturerCreateDto {
     @NotBlank(message = "Name is required")
     @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Name must contain only letters and numbers")
     @Size(max = 255, message = "Name must be less than 255 characters")

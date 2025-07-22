@@ -26,13 +26,18 @@ public class Student {
     @Column(name = "surname")
     private String surname;
 
-    @ManyToMany(mappedBy = "students", cascade = CascadeType.PERSIST)
-    @ToString.Exclude
+    @ManyToMany
+    @JoinTable(
+            name = "student_lecturer",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "lecturer_id")
+    )
     @Builder.Default
+    @ToString.Exclude
     private Set<Lecturer> lecturers = new HashSet<>();
 
     public void addLecturer(Lecturer lecturer) {
-        lecturers.add(lecturer);
         lecturer.getStudents().add(this);
+        lecturers.add(lecturer);
     }
 }

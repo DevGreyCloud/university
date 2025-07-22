@@ -1,6 +1,6 @@
 package com.acme.university.controllers;
 
-import com.acme.university.dtos.LecturerSimplerDto;
+import com.acme.university.dtos.LecturerCreateDto;
 import com.acme.university.entities.Lecturer;
 import com.acme.university.repositories.LecturerRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,7 +42,7 @@ public class LecturerControllerIntegrationTest {
     @Test
     public void testCreateLecturer() throws Exception {
         // Prepare test data
-        LecturerSimplerDto lecturerDto = new LecturerSimplerDto();
+        LecturerCreateDto lecturerDto = new LecturerCreateDto();
         lecturerDto.setName("John");
         lecturerDto.setSurname("Doe");
 
@@ -65,7 +65,7 @@ public class LecturerControllerIntegrationTest {
         lecturerRepository.save(lecturer);
 
         // Attempt to create a duplicate
-        LecturerSimplerDto lecturerDto = new LecturerSimplerDto();
+        LecturerCreateDto lecturerDto = new LecturerCreateDto();
         lecturerDto.setName("Jane");
         lecturerDto.setSurname("Smith");
 

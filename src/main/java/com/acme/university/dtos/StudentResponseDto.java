@@ -5,8 +5,8 @@ import lombok.Data;
 import java.util.Set;
 
 @Data
-public class StudentNoIdDto {
+public class StudentResponseDto {
     private String name;
     private String surname;
-    private Set<LecturerSimplerDto> lecturers;
+    private Set<LecturerCreateDto> lecturers;
 }
