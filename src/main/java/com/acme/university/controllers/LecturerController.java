@@ -21,8 +21,8 @@ public class LecturerController {
     private final LecturerService lecturerService;
 
     @GetMapping
-    public Iterable<LecturerDto> getLecturers() {
-        return lecturerService.getLecturers();
+    public ResponseEntity<Iterable<LecturerDto>> getLecturers() {
+        return ResponseEntity.ok(lecturerService.getLecturers());
     }
 
     @GetMapping("/{id}")

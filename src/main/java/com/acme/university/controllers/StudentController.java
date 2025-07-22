@@ -21,8 +21,8 @@ public class StudentController {
     private final StudentService studentService;
 
     @GetMapping
-    public Iterable<StudentSummaryDto> getStudents() {
-        return studentService.getStudents();
+    public ResponseEntity<Iterable<StudentSummaryDto>> getStudents() {
+        return ResponseEntity.ok(studentService.getStudents());
     }
 
     @GetMapping("/{id}")
