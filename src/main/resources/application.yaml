@@ -9,4 +9,4 @@ spring:
       maximum-pool-size: 10
       connection-timeout: 30000
   jpa:
-    show-sql: true
+    show-sql: false

@@ -4,8 +4,6 @@ import com.acme.university.dtos.StudentCreateDto;
 import com.acme.university.dtos.StudentDto;
 import com.acme.university.exceptions.LecturerNotFoundException;
 import com.acme.university.exceptions.StudentAlreadyExistsException;
-import com.acme.university.repositories.LecturerRepository;
-import com.acme.university.repositories.StudentRepository;
 import com.acme.university.services.StudentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
