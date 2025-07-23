@@ -28,29 +28,36 @@ public class StudentService {
     @Cacheable(value = "students")
     public Iterable<StudentSummaryDto> getStudents() {
         logger.info("Fetching all students");
+
         var students = studentRepository.findAll()
                 .stream()
                 .map(studentMapper::toSummaryDto)
                 .toList();
+
         logger.debug("Fetched {} students", students.size());
+
         return students;
     }
 
     @Cacheable(value = "studentById", key = "#id")
     public StudentDto getStudentById(Long id) {
         logger.info("Fetching student by id: {}", id);
+
         var student = studentRepository.findById(id).orElse(null);
         if (student == null) {
             logger.warn("Student not found for id: {}", id);
             throw new StudentNotFoundException();
         }
+
         logger.debug("Student found: {} {}", student.getName(), student.getSurname());
+
         return studentMapper.toDto(student);
     }
 
     @Transactional
     public StudentDto createStudent(StudentCreateDto studentCreateDto) {
         logger.info("Creating student: {} {}", studentCreateDto.getName(), studentCreateDto.getSurname());
+
         Optional<Student> existingStudent = studentRepository.findByNameAndSurname(
                 studentCreateDto.getName(),
                 studentCreateDto.getSurname()
@@ -66,7 +73,9 @@ public class StudentService {
 
         student.addLecturer(lecturerMapper.toEntity(lecturer));
         studentRepository.save(student);
+
         logger.info("Student created successfully: {} {}", student.getName(), student.getSurname());
+
         return studentMapper.toDto(student);
     }
 }

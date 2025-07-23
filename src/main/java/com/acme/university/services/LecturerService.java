@@ -26,28 +26,35 @@ public class LecturerService {
     @Cacheable(value = "lecturers")
     public Iterable<LecturerSummaryDto> getLecturers() {
         logger.info("Fetching all lecturers");
+
         var lecturers = lecturerRepository.findAll()
                 .stream()
                 .map(lecturerMapper::toSummaryDto)
                 .toList();
+
         logger.debug("Fetched {} lecturers", lecturers.size());
+
         return lecturers;
     }
 
     @Cacheable(value = "lecturerById", key = "#id")
     public LecturerDto getLecturerById(Long id) {
         logger.info("Fetching lecturer by id: {}", id);
+
         var lecturer = lecturerRepository.findById(id).orElse(null);
         if (lecturer == null) {
             logger.warn("Lecturer not found for id: {}", id);
             throw new LecturerNotFoundException();
         }
+
         logger.debug("Lecturer found: {} {}", lecturer.getName(), lecturer.getSurname());
+
         return lecturerMapper.toDto(lecturer);
     }
 
     public LecturerDto createLecturer(LecturerCreateDto lecturerCreateDto) {
         logger.info("Creating lecturer: {} {}", lecturerCreateDto.getName(), lecturerCreateDto.getSurname());
+
         Optional<Lecturer> existingLecturer = lecturerRepository.findByNameAndSurname(
                 lecturerCreateDto.getName(),
                 lecturerCreateDto.getSurname()
@@ -60,7 +67,9 @@ public class LecturerService {
 
         var lecturer = lecturerMapper.toEntity(lecturerCreateDto);
         lecturerRepository.save(lecturer);
+
         logger.info("Lecturer created successfully: {} {}", lecturer.getName(), lecturer.getSurname());
+
         return lecturerMapper.toDto(lecturer);
     }
 }

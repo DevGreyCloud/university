@@ -31,8 +31,11 @@ public class LecturerController {
     @Operation(summary = "Get all lecturers")
     public ResponseEntity<Iterable<LecturerSummaryDto>> getLecturers() {
         logger.info("Received request to get all lecturers");
+
         var result = lecturerService.getLecturers();
+
         logger.debug("Returning {} lecturers", ((Collection<?>) result).size());
+
         return ResponseEntity.ok(result);
     }
 
@@ -40,8 +43,11 @@ public class LecturerController {
     @Operation(summary = "Get a lecturer by their id")
     public ResponseEntity<LecturerDto> getLecturerById(@PathVariable Long id) {
         logger.info("Received request to get lecturer by id: {}", id);
+
         var lecturer = lecturerService.getLecturerById(id);
+
         logger.debug("Lecturer found for id {}: {}", id, lecturer.getName());
+
         return ResponseEntity.ok(lecturer);
     }
 
@@ -51,21 +57,26 @@ public class LecturerController {
             @Valid @RequestBody LecturerCreateDto lecturerCreateDto,
             UriComponentsBuilder uriBuilder) {
         logger.info("Received request to create lecturer: {} {}", lecturerCreateDto.getName(), lecturerCreateDto.getSurname());
+
         var lecturerDto = lecturerService.createLecturer(lecturerCreateDto);
         var uri = uriBuilder.path("/lecturers/{id}").buildAndExpand(lecturerDto.getId()).toUri();
+
         logger.info("Lecturer created with id: {}", lecturerDto.getId());
+
         return ResponseEntity.created(uri).body(lecturerDto);
     }
 
     @ExceptionHandler(LecturerNotFoundException.class)
     public ResponseEntity<Map<String, String>> handleLecturerNotFound() {
         logger.warn("Lecturer not found exception handled");
+
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Lecturer not found."));
     }
 
     @ExceptionHandler(LecturerAlreadyExistsException.class)
     public ResponseEntity<Map<String, String>> handleLecturerAlreadyExists() {
         logger.warn("Lecturer already exists exception handled");
+
         return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("error", "Lecturer already exists. Please try again with a different name and surname, or contact the administrator if you believe this is an error on our side."));
     }
 }

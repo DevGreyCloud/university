@@ -18,8 +18,10 @@ public class RateLimiterService {
 
     public RateLimiterService() {
         logger.info("Initializing RateLimiterService");
+
         Bandwidth limit = Bandwidth.classic(100, Refill.intervally(10, Duration.ofMinutes(1)));
         this.bucket = Bucket4j.builder().addLimit(limit).build();
+
         logger.debug("RateLimiterService initialized with limit: {} requests per minute", 100);
     }
 
