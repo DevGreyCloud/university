@@ -3,8 +3,10 @@ package com.acme.university;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 
 @SpringBootApplication
+@EnableCaching
 public class UniversityApplication {
 
     public static void main(String[] args) {// Load .env variables into system properties BEFORE Spring starts

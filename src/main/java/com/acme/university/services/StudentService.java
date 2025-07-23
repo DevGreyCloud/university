@@ -9,6 +9,7 @@ import com.acme.university.mappers.StudentMapper;
 import com.acme.university.repositories.StudentRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -21,6 +22,7 @@ public class StudentService {
     private final StudentMapper studentMapper;
     private final LecturerMapper lecturerMapper;
 
+    @Cacheable(value = "students")
     public Iterable<StudentSummaryDto> getStudents() {
         return studentRepository.findAll()
                 .stream()
@@ -28,6 +30,7 @@ public class StudentService {
                 .toList();
     }
 
+    @Cacheable(value = "studentById", key = "#id")
     public StudentDto getStudentById(Long id) {
         var student = studentRepository.findById(id).orElse(null);
         if (student == null) {

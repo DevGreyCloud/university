@@ -9,6 +9,7 @@ import com.acme.university.exceptions.LecturerNotFoundException;
 import com.acme.university.mappers.LecturerMapper;
 import com.acme.university.repositories.LecturerRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -19,6 +20,7 @@ public class LecturerService {
     private final LecturerRepository lecturerRepository;
     private final LecturerMapper lecturerMapper;
 
+    @Cacheable(value = "lecturers")
     public Iterable<LecturerSummaryDto> getLecturers() {
         return lecturerRepository.findAll()
                 .stream()
@@ -26,6 +28,7 @@ public class LecturerService {
                 .toList();
     }
 
+    @Cacheable(value = "lecturerById", key = "#id")
     public LecturerDto getLecturerById(Long id) {
         var lecturer = lecturerRepository.findById(id).orElse(null);
         if (lecturer == null) {
