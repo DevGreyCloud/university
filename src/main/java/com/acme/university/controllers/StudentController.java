@@ -5,6 +5,7 @@ import com.acme.university.exceptions.LecturerNotFoundException;
 import com.acme.university.exceptions.StudentAlreadyExistsException;
 import com.acme.university.exceptions.StudentNotFoundException;
 import com.acme.university.services.StudentService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,11 +22,13 @@ public class StudentController {
     private final StudentService studentService;
 
     @GetMapping
+    @Operation(summary = "Get all students")
     public ResponseEntity<Iterable<StudentSummaryDto>> getStudents() {
         return ResponseEntity.ok(studentService.getStudents());
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get a student by their id")
     public ResponseEntity<StudentDto> getStudentById(@PathVariable Long id) {
         var student = studentService.getStudentById(id);
 
@@ -33,6 +36,7 @@ public class StudentController {
     }
 
     @PostMapping
+    @Operation(summary = "Create a student")
     public ResponseEntity<?> createStudent(
             @Valid @RequestBody StudentCreateDto studentCreateDto,
             UriComponentsBuilder uriBuilder) {

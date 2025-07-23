@@ -6,6 +6,7 @@ import com.acme.university.dtos.LecturerSummaryDto;
 import com.acme.university.exceptions.LecturerAlreadyExistsException;
 import com.acme.university.exceptions.LecturerNotFoundException;
 import com.acme.university.services.LecturerService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,11 +23,13 @@ public class LecturerController {
     private final LecturerService lecturerService;
 
     @GetMapping
+    @Operation(summary = "Get all lecturers")
     public ResponseEntity<Iterable<LecturerSummaryDto>> getLecturers() {
         return ResponseEntity.ok(lecturerService.getLecturers());
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "Get a lecturer by their id")
     public ResponseEntity<LecturerDto> getLecturerById(@PathVariable Long id) {
         var lecturer = lecturerService.getLecturerById(id);
 
@@ -34,6 +37,7 @@ public class LecturerController {
     }
 
     @PostMapping
+    @Operation(summary = "Create a lecturer")
     public ResponseEntity<?> createLecturer(
             @Valid @RequestBody LecturerCreateDto lecturerCreateDto,
             UriComponentsBuilder uriBuilder) {
