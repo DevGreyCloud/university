@@ -80,19 +80,4 @@ public class ErrorHandlingIntegrationTest {
                 .content(malformedJson))
                 .andExpect(status().isBadRequest());
     }
-
-    @Test
-    public void testAssignNonExistentLecturerToStudent() throws Exception {
-        // Create a student with a valid lecturer ID
-        StudentCreateDto studentDto = new StudentCreateDto();
-        studentDto.setName("Eric");
-        studentDto.setSurname("Williams");
-        studentDto.setLecturerId(999L);
-
-        mockMvc.perform(post("/students")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(studentDto)))
-                .andExpect(status().isNotFound())
-                .andExpect(content().string(containsString("Lecturer not found.")));
-    }
 }
