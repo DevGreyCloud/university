@@ -56,7 +56,7 @@ public class StudentService {
     }
 
     @Transactional
-    @CacheEvict(value = "students", allEntries = true)
+    @CacheEvict(value = {"students", "lecturerById"}, allEntries = true)
     public StudentDto createStudent(StudentCreateDto studentCreateDto) {
         logger.info("Creating student: {} {}", studentCreateDto.getName(), studentCreateDto.getSurname());
 
