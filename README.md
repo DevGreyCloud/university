@@ -47,6 +47,12 @@ This project expects `flyway.user` and `flyway.password` to be defined in your M
    ./mvnw clean install
    ```
 
+### API Documentation (Swagger UI)
+The interactive API documentation is available via Swagger UI:
+- [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+
+Use Swagger UI to explore and test the available API endpoints.
+
 ### API Endpoints
 - `/api/students` - Manage students
 - `/api/lecturers` - Manage lecturers
