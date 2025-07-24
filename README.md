@@ -3,16 +3,22 @@
 This project is a Spring Boot-based University Management System. It provides RESTful APIs for managing students, lecturers, and their relationships, with features such as rate limiting, error handling, and database migrations.
 
 ## Features
-- Student and Lecturer CRUD operations
+- Student and Lecturer CRUD operations with MySQL database for storage
 - Relationship management between students and lecturers
-- Rate limiting for API endpoints
+- Rate limiting for API endpoints using Bucket4j
 - Centralized error handling
 - Database migrations using Flyway
+- Performance and resiliency improvement via Caching using Caffeine
+- Data validation with SQL constraints and using Jakarta validation
+- Integration tests using H2
 
 ## Technologies Used
 - Java 17+
 - Spring Boot
 - Maven
+- MySQL
+- Bucket4J (for rate limiting)
+- Caffeine (for caching)
 - Flyway (for database migrations)
 - H2 (used for integration tests; can be configured for other DBs)
 
