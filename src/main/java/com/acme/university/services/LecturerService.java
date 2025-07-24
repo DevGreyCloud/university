@@ -9,6 +9,7 @@ import com.acme.university.exceptions.LecturerNotFoundException;
 import com.acme.university.mappers.LecturerMapper;
 import com.acme.university.repositories.LecturerRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
@@ -52,6 +53,7 @@ public class LecturerService {
         return lecturerMapper.toDto(lecturer);
     }
 
+    @CacheEvict(value = "lecturers", allEntries = true)
     public LecturerDto createLecturer(LecturerCreateDto lecturerCreateDto) {
         logger.info("Creating lecturer: {} {}", lecturerCreateDto.getName(), lecturerCreateDto.getSurname());
 

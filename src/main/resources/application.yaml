@@ -17,7 +17,7 @@ spring:
       - lecturers
       - lecturerById
     caffeine:
-      spec: maximumSize=1000,expireAfterWrite=10s
+      spec: maximumSize=1000,expireAfterWrite=30s
 logging:
   level:
     root: INFO

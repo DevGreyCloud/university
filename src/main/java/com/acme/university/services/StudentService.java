@@ -9,6 +9,7 @@ import com.acme.university.mappers.StudentMapper;
 import com.acme.university.repositories.StudentRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
@@ -55,6 +56,7 @@ public class StudentService {
     }
 
     @Transactional
+    @CacheEvict(value = "students", allEntries = true)
     public StudentDto createStudent(StudentCreateDto studentCreateDto) {
         logger.info("Creating student: {} {}", studentCreateDto.getName(), studentCreateDto.getSurname());
 
